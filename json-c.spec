@@ -2,12 +2,9 @@
 %global _libdir /%{_lib}
 %define pkg_config_path %{_exec_prefix}/%{_lib}/pkgconfig
 
-# workaround for rhbz 903009
-%global debug_package %{nil}
-
 Name:		json-c
 Version:	0.11
-Release:	12%{?dist}
+Release:	13%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
@@ -116,6 +113,10 @@ mv -T %{buildroot}%{_libdir}/pkgconfig/ \
 %doc doc/html/*
 
 %changelog
+* Fri Oct 21 2016 Radovan Sroka <rsroka@redhat.com> 0.11.13
+- enable debuginfo package
+  resolves: rhbz#1382707
+
 * Mon Mar 02 2015 Jakub Filak <jfilak@redhat.com> - 0.11-12
 - place pkg-config *.pc files in the correct directory
   resolves: #1158842
