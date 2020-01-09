@@ -1,12 +1,13 @@
 %global reldate 20130402
 %global _libdir /%{_lib}
+%define pkg_config_path %{_exec_prefix}/%{_lib}/pkgconfig
 
 # workaround for rhbz 903009
 %global debug_package %{nil}
 
 Name:		json-c
 Version:	0.11
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
@@ -81,6 +82,13 @@ mv %{buildroot}%{_includedir}/json-c \
 ln -s json \
    %{buildroot}%{_includedir}/json-c
 
+# 'make install' places *.pc files in %%{_libdir} which
+# does not have %%{_exec_prefix} in json-c's case, so we
+# have to move the pkg-config directory to its right place.
+mkdir -p %{buildroot}%{pkg_config_path}
+mv -T %{buildroot}%{_libdir}/pkgconfig/ \
+   %{buildroot}%{pkg_config_path}
+
 # temporarily disabled
 #%%check
 #make check
@@ -100,14 +108,18 @@ ln -s json \
 %{_includedir}/json-c
 %{_libdir}/libjson.so
 %{_libdir}/libjson-c.so
-%{_libdir}/pkgconfig/json.pc
-%{_libdir}/pkgconfig/json-c.pc
+%{pkg_config_path}/json.pc
+%{pkg_config_path}/json-c.pc
 
 %files doc
 %defattr(-,root,root,-)
 %doc doc/html/*
 
 %changelog
+* Mon Mar 02 2015 Jakub Filak <jfilak@redhat.com> - 0.11-12
+- place pkg-config *.pc files in the correct directory
+  resolves: #1158842
+
 * Tue Aug 26 2014 Petr Lautrbach <plautrba@redhat.com> 0.11-11
 - move libraries from /usr/lib* to /lib*
   resolves: #1134001
