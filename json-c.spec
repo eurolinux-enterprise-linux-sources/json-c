@@ -2,12 +2,14 @@
 
 Name:		json-c
 Version:	0.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
 URL:		https://github.com/json-c/json-c/wiki
 Source0:	https://github.com/json-c/json-c/archive/json-c-%{version}-%{reldate}.tar.gz
+
+Patch0:		json-c-CVE-2013-6371.patch
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: libtool
@@ -40,6 +42,8 @@ This package contains the reference manual for json-c.
 %prep
 %setup -q -n json-c-json-c-%{version}-%{reldate}
 
+%patch0 -p1 -b .cve20136371
+
 for doc in ChangeLog; do
  iconv -f iso-8859-1 -t utf8 $doc > $doc.new &&
  touch -r $doc $doc.new &&
@@ -51,7 +55,11 @@ autoreconf -fi
 
 
 %build
-%configure --enable-shared --disable-static --disable-rpath
+%configure \
+  --enable-shared \
+  --disable-static \
+  --disable-rpath \
+  --enable-rdrand
 # parallel build is broken for now, make %{?_smp_mflags}
 make
 
@@ -69,6 +77,10 @@ mv %{buildroot}%{_includedir}/json-c \
    %{buildroot}%{_includedir}/json
 ln -s json \
    %{buildroot}%{_includedir}/json-c
+
+
+%check
+make check
 
 
 %clean
@@ -100,6 +112,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 0.11-4
+- fix has collision CVE-2013-6371
+- fix buffer overflow CVE-2013-6370
+- enable upstream test suite
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.11-3
 - Mass rebuild 2014-01-24
 
