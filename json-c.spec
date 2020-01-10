@@ -2,7 +2,7 @@
 
 Name:		json-c
 Version:	0.11
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
@@ -100,6 +100,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.11-3
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.11-2
+- Mass rebuild 2013-12-27
+
 * Mon Apr 29 2013 Remi Collet <remi@fedoraproject.org> - 0.11-1
 - update to 0.11
 - fix source0
